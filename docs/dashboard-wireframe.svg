@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="860" viewBox="0 0 1100 860" fill="none">
+  <rect width="1100" height="860" fill="#F4F4F5"/>
+  <text x="32" y="36" fill="#3F3F46" font-family="Arial, sans-serif" font-size="14" font-weight="700">Spyder Telemetry  low-fidelity dashboard</text>
+  <text x="32" y="56" fill="#71717A" font-family="Arial, sans-serif" font-size="12">One screen. Status first, then speed and pack, then tyres, then every channel.</text>
+
+  <rect x="24" y="76" width="1052" height="64" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <rect x="40" y="94" width="28" height="28" rx="4" fill="#E4E4E7"/>
+  <text x="80" y="106" fill="#18181B" font-family="Arial, sans-serif" font-size="14" font-weight="700">Spyder Telemetry</text>
+  <text x="80" y="124" fill="#71717A" font-family="Arial, sans-serif" font-size="11">Live vehicle sensors</text>
+  <rect x="760" y="96" width="90" height="24" rx="12" fill="#E4E4E7"/>
+  <text x="778" y="112" fill="#3F3F46" font-family="Arial, sans-serif" font-size="11">API host</text>
+  <rect x="860" y="96" width="96" height="24" rx="12" fill="#DCFCE7"/>
+  <text x="872" y="112" fill="#166534" font-family="Arial, sans-serif" font-size="11">API connected</text>
+  <rect x="966" y="96" width="86" height="24" rx="12" fill="#DCFCE7"/>
+  <text x="994" y="112" fill="#166534" font-family="Arial, sans-serif" font-size="11">Live</text>
+
+  <rect x="24" y="156" width="1052" height="72" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="40" y="180" fill="#71717A" font-family="Arial, sans-serif" font-size="11">VEHICLE STATUS</text>
+  <text x="40" y="204" fill="#18181B" font-family="Arial, sans-serif" font-size="18" font-weight="700">All reporting sensors in range</text>
+  <text x="900" y="200" fill="#71717A" font-family="Arial, sans-serif" font-size="12">12/12 reporting</text>
+
+  <text x="24" y="256" fill="#18181B" font-family="Arial, sans-serif" font-size="13" font-weight="700">Driving and pack</text>
+  <rect x="24" y="268" width="252" height="150" rx="8" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="2"/>
+  <text x="40" y="292" fill="#71717A" font-family="Arial, sans-serif" font-size="11">PRIMARY · VEHICLE SPEED</text>
+  <text x="40" y="332" fill="#18181B" font-family="Arial, sans-serif" font-size="28" font-weight="700">82.4 km/h</text>
+  <text x="210" y="292" fill="#166534" font-family="Arial, sans-serif" font-size="11">In range</text>
+  <rect x="40" y="352" width="200" height="28" rx="4" fill="#F4F4F5"/>
+  <text x="40" y="402" fill="#71717A" font-family="Arial, sans-serif" font-size="11">sparkline · range marker · age</text>
+
+  <rect x="288" y="268" width="252" height="150" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="304" y="292" fill="#71717A" font-family="Arial, sans-serif" font-size="11">PACK SOC</text>
+  <text x="304" y="332" fill="#18181B" font-family="Arial, sans-serif" font-size="28" font-weight="700">76.2 %</text>
+  <rect x="304" y="352" width="200" height="28" rx="4" fill="#F4F4F5"/>
+
+  <rect x="552" y="268" width="252" height="150" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="568" y="292" fill="#71717A" font-family="Arial, sans-serif" font-size="11">PACK VOLTAGE</text>
+  <text x="568" y="332" fill="#18181B" font-family="Arial, sans-serif" font-size="28" font-weight="700">412.0 V</text>
+  <rect x="568" y="352" width="200" height="28" rx="4" fill="#F4F4F5"/>
+
+  <rect x="816" y="268" width="260" height="150" rx="8" fill="#FFFFFF" stroke="#FECACA"/>
+  <text x="832" y="292" fill="#71717A" font-family="Arial, sans-serif" font-size="11">PACK CURRENT</text>
+  <text x="960" y="292" fill="#B91C1C" font-family="Arial, sans-serif" font-size="11">Out of range</text>
+  <text x="832" y="332" fill="#18181B" font-family="Arial, sans-serif" font-size="28" font-weight="700">-340 A</text>
+  <rect x="832" y="352" width="220" height="28" rx="4" fill="#FEE2E2"/>
+
+  <text x="24" y="450" fill="#18181B" font-family="Arial, sans-serif" font-size="13" font-weight="700">Chassis</text>
+  <rect x="24" y="462" width="520" height="210" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="40" y="486" fill="#18181B" font-family="Arial, sans-serif" font-size="13" font-weight="700">Tyre pressures</text>
+  <text x="40" y="504" fill="#71717A" font-family="Arial, sans-serif" font-size="11">Front axle on top. 150250 kPa.</text>
+  <rect x="40" y="520" width="230" height="64" rx="6" fill="#FAFAFA" stroke="#E4E4E7"/>
+  <text x="52" y="544" fill="#71717A" font-family="Arial, sans-serif" font-size="11">FL</text>
+  <text x="52" y="566" fill="#18181B" font-family="Arial, sans-serif" font-size="16" font-weight="700">210 kPa</text>
+  <rect x="286" y="520" width="230" height="64" rx="6" fill="#FAFAFA" stroke="#E4E4E7"/>
+  <text x="298" y="544" fill="#71717A" font-family="Arial, sans-serif" font-size="11">FR</text>
+  <text x="298" y="566" fill="#18181B" font-family="Arial, sans-serif" font-size="16" font-weight="700">206 kPa</text>
+  <rect x="40" y="592" width="230" height="64" rx="6" fill="#FAFAFA" stroke="#E4E4E7"/>
+  <text x="52" y="616" fill="#71717A" font-family="Arial, sans-serif" font-size="11">RL</text>
+  <text x="52" y="638" fill="#18181B" font-family="Arial, sans-serif" font-size="16" font-weight="700">198 kPa</text>
+  <rect x="286" y="592" width="230" height="64" rx="6" fill="#FEE2E2" stroke="#FECACA"/>
+  <text x="298" y="616" fill="#71717A" font-family="Arial, sans-serif" font-size="11">RR · out of range</text>
+  <text x="298" y="638" fill="#18181B" font-family="Arial, sans-serif" font-size="16" font-weight="700">121 kPa</text>
+
+  <rect x="560" y="462" width="252" height="100" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="576" y="486" fill="#71717A" font-family="Arial, sans-serif" font-size="11">BATTERY TEMPERATURE</text>
+  <text x="576" y="522" fill="#18181B" font-family="Arial, sans-serif" font-size="22" font-weight="700">46.2 °C</text>
+  <rect x="824" y="462" width="252" height="100" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="840" y="486" fill="#71717A" font-family="Arial, sans-serif" font-size="11">MOTOR TEMPERATURE</text>
+  <text x="840" y="522" fill="#18181B" font-family="Arial, sans-serif" font-size="22" font-weight="700">81.0 °C</text>
+  <rect x="560" y="572" width="252" height="100" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="576" y="596" fill="#71717A" font-family="Arial, sans-serif" font-size="11">BRAKE PRESSURE</text>
+  <text x="576" y="632" fill="#18181B" font-family="Arial, sans-serif" font-size="22" font-weight="700">12.4 bar</text>
+  <rect x="824" y="572" width="252" height="100" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="840" y="596" fill="#71717A" font-family="Arial, sans-serif" font-size="11">STEERING ANGLE</text>
+  <text x="840" y="632" fill="#18181B" font-family="Arial, sans-serif" font-size="22" font-weight="700">-4.1 deg</text>
+
+  <text x="24" y="704" fill="#18181B" font-family="Arial, sans-serif" font-size="13" font-weight="700">All sensors</text>
+  <rect x="24" y="716" width="1052" height="112" rx="8" fill="#FFFFFF" stroke="#D4D4D8"/>
+  <text x="40" y="742" fill="#71717A" font-family="Arial, sans-serif" font-size="11">SENSOR          VALUE        VALID RANGE       STATUS          UPDATED</text>
+  <text x="40" y="766" fill="#18181B" font-family="Arial, sans-serif" font-size="12">Vehicle speed    82.4 km/h    0250 km/h        In range        just now</text>
+  <text x="40" y="788" fill="#18181B" font-family="Arial, sans-serif" font-size="12">Pack current     -340 A       -300300 A        Out of range    just now</text>
+  <text x="40" y="810" fill="#71717A" font-family="Arial, sans-serif" font-size="12">&remaining channels, same columns, sensor id under the name</text>
+</svg>
