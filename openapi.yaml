@@ -1,18 +1,250 @@
 openapi: 3.0.3
 info:
-  title: Vehicle Analytics API Assessment
+  title: Vehicle Analytics API
   version: 1.0.0
   description: >
-    Only the health endpoint is predefined. You must design and implement the
-    metadata and data API, then document your full API in this spec (or a separate
-    file) and describe how to view it in justification.md.
+    Telemetry API in front of the read-only sensor emulator. Metadata and live
+    data are separate resources. Invalid emulator frames are dropped here and
+    never stored or streamed. Swagger UI is served at /docs.
+servers:
+  - url: http://localhost:4000
+    description: Local API
+tags:
+  - name: Health
+  - name: Metadata
+  - name: Telemetry
 paths:
   /health:
     get:
-      summary: Health check (implemented in skeleton)
+      tags: [Health]
+      summary: Health check
+      description: >
+        Reports whether the emulator HTTP metadata endpoint is reachable and
+        whether the API's WebSocket consumer is currently connected.
       responses:
         '200':
-          description: OK
-servers:
-  - url: http://localhost:4000
-    description: Local development server
+          description: Emulator HTTP is reachable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+              example:
+                status: ok
+                emulator: true
+                stream: connected
+        '503':
+          description: Emulator HTTP is not reachable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+              example:
+                status: unhealthy
+                emulator: false
+                stream: disconnected
+  /sensors:
+    get:
+      tags: [Metadata]
+      summary: List sensor metadata
+      description: >
+        Static catalogue joined with the API valid-range table. Call this once
+        and cache it. It does not include telemetry values.
+      responses:
+        '200':
+          description: Sensor catalogue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorList'
+        '503':
+          description: Catalogue has not been loaded from the emulator yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /telemetry/latest:
+    get:
+      tags: [Telemetry]
+      summary: Latest accepted reading per sensor
+      description: >
+        One reading per sensor that has produced at least one valid sample.
+        Out-of-range values are included and marked with inRange=false.
+        Invalid frames are omitted.
+      responses:
+        '200':
+          description: Latest readings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestTelemetry'
+  /telemetry/latest/{sensorId}:
+    get:
+      tags: [Telemetry]
+      summary: Latest accepted reading for one sensor
+      parameters:
+        - name: sensorId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1000000070501'
+      responses:
+        '200':
+          description: Latest reading
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reading'
+        '400':
+          description: sensorId is not an integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Unknown sensor, or no valid reading yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /telemetry/stream:
+    get:
+      tags: [Telemetry]
+      summary: Live readings (Server-Sent Events)
+      description: >
+        `text/event-stream`. On connect the API replays the current latest
+        reading for each sensor, then sends a `reading` event for every newly
+        accepted sample. Comment lines (`: ping`) are heartbeats. Invalid
+        frames are not emitted.
+      responses:
+        '200':
+          description: Event stream of accepted readings
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              example: |
+                event: reading
+                data: {"sensorId":1000000070501,"value":46.2,"timestamp":1700000000.1,"inRange":true}
+  /telemetry/quality:
+    get:
+      tags: [Telemetry]
+      summary: Ingestion counters
+      description: >
+        How many frames were accepted, recovered by coercion, dropped, or
+        marked out of range since the process started.
+      responses:
+        '200':
+          description: Quality counters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quality'
+  /openapi.yaml:
+    get:
+      tags: [Health]
+      summary: This OpenAPI document
+      responses:
+        '200':
+          description: OpenAPI YAML
+          content:
+            application/yaml:
+              schema:
+                type: string
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, emulator, stream]
+      properties:
+        status:
+          type: string
+          enum: [ok, unhealthy]
+        emulator:
+          type: boolean
+        stream:
+          type: string
+          enum: [connected, disconnected]
+    Sensor:
+      type: object
+      required: [sensorId, sensorName, unit]
+      properties:
+        sensorId:
+          type: integer
+          format: int64
+          example: 1000000070501
+        sensorName:
+          type: string
+          example: BATTERY_TEMPERATURE
+        unit:
+          type: string
+          example: C
+        validMin:
+          type: number
+          example: 20
+        validMax:
+          type: number
+          example: 80
+    SensorList:
+      type: object
+      required: [sensors]
+      properties:
+        sensors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sensor'
+    Reading:
+      type: object
+      required: [sensorId, value, timestamp, inRange]
+      properties:
+        sensorId:
+          type: integer
+          format: int64
+        value:
+          type: number
+        timestamp:
+          type: number
+          description: Unix time in seconds, as emitted by the emulator
+        inRange:
+          type: boolean
+          description: True when value is inside the sensor's inclusive valid range
+    LatestTelemetry:
+      type: object
+      required: [streamConnected, readings]
+      properties:
+        streamConnected:
+          type: boolean
+        readings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reading'
+    Quality:
+      type: object
+      required: [received, accepted, recovered, dropped, outOfRange, dropReasons, streamConnected]
+      properties:
+        received:
+          type: integer
+        accepted:
+          type: integer
+        recovered:
+          type: integer
+          description: Accepted frames that needed a numeric-string coercion
+        dropped:
+          type: integer
+        outOfRange:
+          type: integer
+        dropReasons:
+          type: object
+          additionalProperties:
+            type: integer
+        streamConnected:
+          type: boolean
+    Error:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: string

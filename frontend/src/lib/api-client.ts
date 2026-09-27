@@ -1,54 +1,74 @@
 /**
- * API client for the Vehicle Analytics backend.
- * The backend API surface is designed by you in the fullstack assessment (va-fullstack-assessment).
- * The only guaranteed endpoint is GET /health. You must add functions that call your
- * metadata and data routes (paths and response shapes are up to your API design).
+ * Client for the Vehicle Analytics API.
+ * Metadata: GET /sensors. Latest values: GET /telemetry/latest.
+ * Live updates: EventSource on GET /telemetry/stream.
  */
 
 export interface SensorMetadata {
   sensorId: number;
   sensorName: string;
   unit: string;
+  validMin?: number;
+  validMax?: number;
 }
 
 export interface TelemetryReading {
   sensorId: number;
   value: number;
   timestamp: number;
+  inRange: boolean;
 }
 
 export interface HealthResponse {
   status: string;
   emulator?: boolean;
+  stream?: 'connected' | 'disconnected';
   reason?: string;
+}
+
+export interface LatestTelemetryResponse {
+  streamConnected: boolean;
+  readings: TelemetryReading[];
+}
+
+export interface SensorListResponse {
+  sensors: SensorMetadata[];
 }
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
 
-export async function fetchHealth(timeoutMs = 3000): Promise<HealthResponse> {
-  const url = `${API_BASE_URL}/health`;
+async function fetchJson<T>(path: string, timeoutMs = 5000): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { mode: 'cors', signal: controller.signal });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.reason ?? `Health: ${res.status} ${res.statusText}`);
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      mode: 'cors',
+      signal: controller.signal
+    });
+    const data = (await response.json().catch(() => ({}))) as { error?: string; reason?: string };
+    if (!response.ok) {
+      throw new Error(data.error ?? data.reason ?? `${response.status} ${response.statusText}`);
     }
-    return data as HealthResponse;
-  } catch (err: any) {
-    if (err?.name === 'AbortError') {
-      throw new Error('Health check timed out');
+    return data as T;
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timed out');
     }
-    throw err;
+    throw error;
   } finally {
     clearTimeout(timer);
   }
 }
 
-// ---------------------------------------------------------------------------
-// Add your own functions here to call the metadata and data endpoints you
-// designed in the API section (e.g. fetchSensors(), fetchLatestTelemetry(),
-// or whatever paths and response shapes you defined). Use the types above
-// or define new ones to match your API.
-// ---------------------------------------------------------------------------
+export function fetchHealth(timeoutMs = 3000): Promise<HealthResponse> {
+  return fetchJson<HealthResponse>('/health', timeoutMs);
+}
+
+export async function fetchSensors(): Promise<SensorMetadata[]> {
+  const body = await fetchJson<SensorListResponse>('/sensors');
+  return body.sensors;
+}
+
+export function fetchLatestTelemetry(): Promise<LatestTelemetryResponse> {
+  return fetchJson<LatestTelemetryResponse>('/telemetry/latest');
+}
