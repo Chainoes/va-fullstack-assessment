@@ -5,7 +5,7 @@ import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import yaml from 'js-yaml';
 import swaggerUi from 'swagger-ui-express';
-import { startEmulatorClient } from './emulator-client';
+import { emulatorBaseUrl, startEmulatorClient } from './emulator-client';
 import { TelemetryHub } from './telemetry-hub';
 import type { Reading } from './types';
 
@@ -34,7 +34,7 @@ const openApiSpec = loadOpenApiSpec();
 app.get('/health', async (_req, res) => {
   const stream = hub.isStreamConnected() ? 'connected' : 'disconnected';
   try {
-    const response = await fetch(`${EMULATOR_URL.replace(/\/$/, '')}/sensors`, {
+    const response = await fetch(`${emulatorBaseUrl(EMULATOR_URL)}/sensors`, {
       signal: AbortSignal.timeout(3000)
     });
     if (response.ok) {
