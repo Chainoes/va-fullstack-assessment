@@ -3,6 +3,14 @@ import { rangeFor } from './ranges';
 import type { TelemetryHub } from './telemetry-hub';
 import type { SensorMetadata } from './types';
 
+/**
+ * Node resolves "localhost" to IPv6 first. A second dev server can bind
+ * [::]:3001 while the emulator is listening on 127.0.0.1, so always dial IPv4.
+ */
+export function emulatorBaseUrl(url: string): string {
+  return url.replace(/\/$/, '').replace('://localhost', '://127.0.0.1');
+}
+
 function parseSensor(raw: unknown): SensorMetadata | undefined {
   if (!raw || typeof raw !== 'object') return undefined;
   const record = raw as Record<string, unknown>;
@@ -20,7 +28,7 @@ function parseSensor(raw: unknown): SensorMetadata | undefined {
 }
 
 export function startEmulatorClient(hub: TelemetryHub, emulatorUrl: string): () => void {
-  const base = emulatorUrl.replace(/\/$/, '');
+  const base = emulatorBaseUrl(emulatorUrl);
   const wsUrl = `${base.replace(/^http/i, 'ws')}/ws/telemetry`;
   let stopped = false;
   let generation = 0;
